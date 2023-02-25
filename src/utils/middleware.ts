@@ -13,9 +13,8 @@ const unknownEndpoint = (_request:Request, response:Response) => {
   response.status(404).send({ error: 'unknown endpoint' });
 };
 
-const errorHandler = (error:unknown, _request:Request, response:Response, next:NextFunction) => {
-    const errorMessage = 'Something went wrong.';
-    if (error instanceof Error) {
+const errorHandler = (error:Error, _request:Request, response:Response, next:NextFunction) => {
+
   logger.error(error.message);
 
   if (error.name === 'CastError') {
@@ -27,8 +26,7 @@ const errorHandler = (error:unknown, _request:Request, response:Response, next:N
   }
 
   next(error);
-}
-response.status(400).send(errorMessage);
+
 };
 
 export {
