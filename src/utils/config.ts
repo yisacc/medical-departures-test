@@ -1,5 +1,6 @@
 import * as dotenv from "dotenv";
-dotenv.config({ path: __dirname+'/.env' });
+dotenv.config();
 
 
   export const PORT= process.env.PORT || 3001;
+  export const DATABASE_URL:string= process.env.DATABASE_URL!;

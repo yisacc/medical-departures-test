@@ -4,7 +4,6 @@ import cors from 'cors';
 import * as middleware from './utils/middleware';
 import * as logger from './utils/logger';
 
-
 app.use(cors());
 app.use(express.json());
 app.use(middleware.requestLogger);
