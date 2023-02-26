@@ -10,3 +10,29 @@ content-type: application/json
   "author": "george orwell",
   "url": "not provided"
 }
+
+###
+POST {{baseUrl}}/blogs
+content-type: application/json
+
+{ 
+  "user_id":2,
+  "title": "animal farm",
+  "author": "george orwell",
+  "url": "test.com"
+}
+
+###
+GET {{baseUrl}}/blogs/2
+
+
+###
+PUT {{baseUrl}}/blogs/23
+content-type: application/json
+
+{ 
+  "user_id":2,
+  "title": "the body",
+  "author": "brayan",
+  "url": "test.com"
+}

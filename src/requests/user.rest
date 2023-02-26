@@ -20,3 +20,45 @@ content-type: application/json
     "name": "Yisacc Aberham",
     "password": "mytest"
 }
+
+###
+POST {{baseUrl}}/users
+content-type: application/json
+
+{
+    "username": "kasahun",
+    "name": "kasahun Jote",
+    "password": "kasthegreat"
+}
+
+###
+POST {{baseUrl}}/users
+content-type: application/json
+
+{
+    "username": "sara",
+    "name": "sara seid",
+    "password": "sariti"
+}
+
+###
+GET {{baseUrl}}/users/2
+
+
+###
+PUT {{baseUrl}}/users/8
+content-type: application/json
+
+{
+    "username": "jasri",
+    "name": "jasri seid"
+}
+
+###
+PUT {{baseUrl}}/users/3
+content-type: application/json
+
+{
+    "username": "hanicho",
+    "name": "hanicho cake"
+}
