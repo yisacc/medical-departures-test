@@ -6,6 +6,7 @@ import * as logger from './utils/logger';
 import blogsRouter from './controllers/blogs';
 import {connectToDatabase} from './utils/db';
 import usersRouter from './controllers/users';
+import loginRouter from './controllers/login';
 
 const start = async () => {
 await connectToDatabase()
@@ -23,6 +24,7 @@ app.get('/ping', (_req, res) => {
   });
   app.use('/api/users', usersRouter)
   app.use('/api/blogs',blogsRouter)
+  app.use('/api/login',loginRouter)
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);

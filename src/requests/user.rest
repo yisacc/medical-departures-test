@@ -54,11 +54,13 @@ content-type: application/json
     "name": "jasri seid"
 }
 
+
 ###
-PUT {{baseUrl}}/users/3
+POST {{baseUrl}}/users
 content-type: application/json
 
 {
-    "username": "hanicho",
-    "name": "hanicho cake"
+    "username": "newuser",
+    "name": "new user",
+    "password": "testpass"
 }

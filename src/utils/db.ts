@@ -2,8 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { DATABASE_URL } from './config';
 import { Umzug, SequelizeStorage } from 'umzug';
 
-console.log('database url',DATABASE_URL)
-export const sequelizeConnection = new Sequelize(DATABASE_URL);
+export const sequelizeConnection = new Sequelize(DATABASE_URL!);
 
 const migrationConf = {
   migrations: {

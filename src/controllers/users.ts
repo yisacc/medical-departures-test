@@ -20,6 +20,7 @@ usersRouter.post('/', asyncHandler(async (req, res) => {
   const {password,username,name}:{password:string,username:string,name:string}=req.body;
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds) 
+  console.log('passwordHash',passwordHash)
   const query=`
   INSERT INTO users
   (
