@@ -1,0 +1,22 @@
+GET {{baseUrl}}/users
+
+
+###
+POST {{baseUrl}}/users
+content-type: application/json
+
+{
+    "username": "root two",
+    "name": "Supermanuser",
+    "password": "salainen"
+}
+
+###
+POST {{baseUrl}}/users
+content-type: application/json
+
+{
+    "username": "yisacc",
+    "name": "Yisacc Aberham",
+    "password": "mytest"
+}

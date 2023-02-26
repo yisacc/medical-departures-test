@@ -5,6 +5,7 @@ import * as middleware from './utils/middleware';
 import * as logger from './utils/logger';
 import blogsRouter from './controllers/blogs';
 import {connectToDatabase} from './utils/db';
+import usersRouter from './controllers/users';
 
 const start = async () => {
 await connectToDatabase()
@@ -20,6 +21,7 @@ app.get('/ping', (_req, res) => {
     logger.info('someone pinged here');
     res.send('pong');
   });
+  app.use('/api/users', usersRouter)
   app.use('/api/blogs',blogsRouter)
 
 app.use(middleware.unknownEndpoint);

@@ -1,12 +1,7 @@
 import {DataTypes, Model } from 'sequelize';
 import { sequelizeConnection as sequelize } from '../utils/db';
 
-export default class Blog extends Model {
-    public id?: number;
-    public title!: string;
-    public author!: string;
-    public url?: string;
-  }
+export default class Blog extends Model {}
 Blog.init({
   id: {
     type: DataTypes.INTEGER,
@@ -18,10 +13,11 @@ Blog.init({
     allowNull: false
   },
   author: {
-    type: DataTypes.BOOLEAN
+    type: DataTypes.TEXT,
+    allowNull:false
   },
   url: {
-    type: DataTypes.BOOLEAN
+    type: DataTypes.TEXT,
   }
 }, {
     sequelize,
