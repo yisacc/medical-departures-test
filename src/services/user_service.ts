@@ -90,14 +90,9 @@ export class UserService extends CommonService {
 
   // add user
   public async addUser(user: User, pool?: PGPool): Promise<any> {
-    let pooldefinedLocally = false
-
     // pool is not supplied, create one AND start transaction
     if (pool === undefined) {
-      pooldefinedLocally = true
       pool = Helper.pool()
-      // begin transaction
-      await Helper.beginTransaction(pool, this.user_current)
     }
 
     try {
@@ -106,9 +101,6 @@ export class UserService extends CommonService {
 				VALUES ('${user.username}', '${user.hashpass}') returning id`
 
       const userResult = await pool.aquery(this.user_current, sql_user, [])
-
-      // commit if there is a transaction
-      if (pooldefinedLocally) await Helper.commitTransaction(pool, this.user_current)
 
       return {
         success: true,
@@ -200,8 +192,6 @@ export class UserService extends CommonService {
   public async updateUser(user: User) {
     const pool = Helper.pool()
     try {
-      // begin transaction
-      await Helper.beginTransaction(pool, this.user_current)
       let user_columns = `username = '${user.username}'`
       if (user.hashpass) user_columns += `, hashpass = '${user.hashpass}'`
       // update users
@@ -212,8 +202,6 @@ export class UserService extends CommonService {
 
       await pool.aquery(this.user_current, [] as any)
 
-      //commit transaction
-      await Helper.commitTransaction(pool, this.user_current)
       return { success: true, data: { message: messages.success.update } }
     } catch (error) {
       logger.error(`UserService.updateUser() Error: ${error}`)

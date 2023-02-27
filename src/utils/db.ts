@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { HOST,USER,PASSWORD,DATABASE,DATABASE_PORT } from './config';
 import { Umzug, SequelizeStorage } from 'umzug';
 
+
 export const sequelizeConnection = new Sequelize(DATABASE,USER,PASSWORD,{
 host:HOST,
 dialect: 'postgres',
