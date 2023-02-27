@@ -26,7 +26,7 @@ const errorHandler = (error:Error, _request:Request, response:Response, next:Nex
   }
 
   next(error);
-
+return null;
 };
 
 export {

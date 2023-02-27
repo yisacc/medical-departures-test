@@ -1,44 +1,43 @@
-import express from 'express'
-const usersRouter = express.Router();
-import asyncHandler from 'express-async-handler';
+import { Response } from 'express'
 import bcrypt from 'bcrypt';
 import {sequelizeConnection as sequelize} from '../utils/db';
 import HttpResponse from '../utils/httpResponse';
+import { CUserAuthInfoRequest } from '../typings/interface';
 
 
 
 
-usersRouter.get('/', asyncHandler(async (_req, res) => {
-  const query= 'SELECT id,username,name FROM users'
-  const [results] = await sequelize.query(query)
-  const httpResponse = HttpResponse.get(results)
-  res.status(200).json(httpResponse)
-}))
-
-usersRouter.post('/', asyncHandler(async (req, res) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const {password,username,name}:{password:string,username:string,name:string}=req.body;
-  const saltRounds = 10
-  const passwordHash = await bcrypt.hash(password, saltRounds) 
-  console.log('passwordHash',passwordHash)
-  const query=`
-  INSERT INTO users
-  (
-    username, name, passwordHash
-  )
-  VALUES
-  (
-    '${username}', '${name}', '${passwordHash}'
-  )
-  RETURNING id
-`;
+export class UserController {
+  public static async getAll(_req:CUserAuthInfoRequest,res:Response){
+    const query= 'SELECT id,username,name FROM users'
+    console.log('called')
     const [results] = await sequelize.query(query)
-    const httpResponse = HttpResponse.created(results)
-    res.status(201).json(httpResponse)
-}))
+    const httpResponse = HttpResponse.get(results)
+    res.status(200).json(httpResponse)
+  }
+  
+  public static async addUser(req: CUserAuthInfoRequest, res: Response) {
+    const {password,username,name}:{password:string,username:string,name:string}=req.body;
+    const saltRounds = 10
+    const passwordHash = await bcrypt.hash(password, saltRounds) 
+    const query=`
+    INSERT INTO users
+    (
+      username, name, passwordHash
+    )
+    VALUES
+    (
+      '${username}', '${name}', '${passwordHash}'
+    )
+    RETURNING id
+  `;
+      const [results] = await sequelize.query(query)
+      const httpResponse = HttpResponse.created(results)
+      res.status(201).json(httpResponse)
+  }
 
-usersRouter.get('/:id', asyncHandler(async (req, res) => {
-  const id=Number(req.params.id)
+  public static async getUser(req: CUserAuthInfoRequest, res: Response) {
+    const id=Number(req.params.id)
   const query=`SELECT username, name FROM users WHERE id = ${id}`
   const [results]=await sequelize.query(query)
   if (results.length) {
@@ -47,11 +46,10 @@ usersRouter.get('/:id', asyncHandler(async (req, res) => {
   } else {
     res.status(404).end()
   }
-}))
+  }
 
-usersRouter.put('/:id', asyncHandler(async (req, res) => {
-  const id=Number(req.params.id)
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  public static async updateUser(req: CUserAuthInfoRequest, res: Response) {
+    const id=Number(req.params.id)
   const {username,name}:
   {username:string,name:string}=req.body;
   const query=`UPDATE users
@@ -66,6 +64,9 @@ usersRouter.put('/:id', asyncHandler(async (req, res) => {
   } else {
     res.status(404).end()
   }
-}))
+  }
+}
 
-export default usersRouter
+
+
+export default UserController
