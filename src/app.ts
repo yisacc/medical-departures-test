@@ -7,18 +7,23 @@ import path from 'path'
 import swaggerUi from 'swagger-ui-express'
 import * as middleware from './utils/middleware';
 import * as logger from './utils/logger';
-import {connectToDatabase} from './utils/db';
 import SwaggerInit from './swagger/init'
 import routes from './routes'
-
+import DBSchema from './db_pool/schema'
+import PGPool from './db_pool/pg_pool';
+import * as config from '../config'
 
 async function main() {
-await connectToDatabase()
 
 
 app.use(cors());
 app.use(express.json());
 app.use(middleware.requestLogger);
+	// set dbpool
+	const pool = new PGPool(config.dbObj)
+	app.set('dbPool', pool)
+	await DBSchema.handle(main, pool, config.dbObj)
+
 	// set swagger
 	try {
 		await SwaggerInit();

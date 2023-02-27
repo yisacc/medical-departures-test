@@ -1,87 +1,43 @@
+import { Response } from 'express'
 
-type DataResponseEntity<T> = {
-  message?: string
-  code?: number
-} & T
-
-type DtoHttpResponse<T> = {
-  code: number
-  message: string
-} & Omit<DataResponseEntity<T>, 'message' | 'code'>
-
-class HttpResponse {
-  /**
-   * Base Response
-   * @param dataResponse
-   * @returns
-   */
-  private static baseResponse<T>(
-    dataResponse: DataResponseEntity<T>
-  ): DtoHttpResponse<T> {
-    const {
-      message = 'data has been received',
-      code = 200,
-      ...rest
-    } = dataResponse
-
-    return { code, message, ...rest }
-  }
-
-  /**
-   * Response Get or Sucess
-   * @param dataResponse
-   * @param options
-   * @returns
-   */
-  public static get<T>(
-    dataResponse: DataResponseEntity<T>,
-  ): DtoHttpResponse<T> {
-    const message = 'success.data_received'
-
-    return this.baseResponse({ message, ...dataResponse })
-  }
-
-  /**
-   * Response Created
-   * @param dataResponse
-   * @param options
-   * @returns
-   */
-  public static created<T>(
-    dataResponse: DataResponseEntity<T>,
-  ): DtoHttpResponse<T> {
-    const message = 'success.data_added'
-
-    return this.baseResponse({ code: 201, message, ...dataResponse })
-  }
-
-  /**
-   * Response Updated
-   * @param dataResponse
-   * @param options
-   * @returns
-   */
-  public static updated<T>(
-    dataResponse: DataResponseEntity<T>,
-  ): DtoHttpResponse<T> {
-    const message = 'success.data_updated'
-
-    return this.baseResponse({ message, ...dataResponse })
-  }
-
-  /**
-   * Response Deleted
-   * @param dataResponse
-   * @param options
-   * @returns
-   */
-  public static deleted<T>(
-    dataResponse: DataResponseEntity<T>,
-  ): DtoHttpResponse<T> {
-    const message = 'success.data_deleted'
-
-    return this.baseResponse({ message, ...dataResponse })
-  }
+interface responseObject {
+  success: boolean
+  data: object
+  status?: number
 }
 
-export default HttpResponse
+export class ResponseWrapper {
+  public res: Response
+
+  constructor(response: Response) {
+    this.res = response
+  }
+
+  public handle(response: responseObject, success_code: number, fail_code: number): Response {
+    if (response.success) {
+      return this.res.status(success_code).send(response)
+    }
+    if (response.status) {
+      fail_code = response.status
+    }
+
+    delete response.status
+    return this.res.status(fail_code).send(response)
+  }
+
+  public created(response: responseObject): Response {
+    return this.handle(response, 201, 400)
+  }
+
+  public ok(response: responseObject): Response {
+    return this.handle(response, 200, 400)
+  }
+
+  public unauthorized(response: responseObject): Response {
+    return this.handle(response, 200, 401)
+  }
+
+  public forbidden(response: responseObject): Response {
+    return this.handle(response, 200, 403)
+  }
+}

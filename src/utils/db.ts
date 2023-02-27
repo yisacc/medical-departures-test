@@ -1,8 +1,12 @@
 import { Sequelize } from 'sequelize-typescript';
-import { DATABASE_URL } from './config';
+import { HOST,USER,PASSWORD,DATABASE,DATABASE_PORT } from './config';
 import { Umzug, SequelizeStorage } from 'umzug';
 
-export const sequelizeConnection = new Sequelize(DATABASE_URL!);
+export const sequelizeConnection = new Sequelize(DATABASE,USER,PASSWORD,{
+host:HOST,
+dialect: 'postgres',
+port: parseInt(DATABASE_PORT)
+});
 
 const migrationConf = {
   migrations: {
@@ -24,8 +28,8 @@ const runMigrations = async () => {
 export const connectToDatabase = async () => {
   try {
     await sequelizeConnection.authenticate();
-    await runMigrations()
     console.log('connected to the database');
+    await runMigrations()
   } catch (err) {
     console.log('failed to connect to the database',err);
     return process.exit(1);

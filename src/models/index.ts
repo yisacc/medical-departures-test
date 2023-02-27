@@ -1,15 +1,7 @@
-import Blog from './blog'
-import User from './user'
-import UserBlogs from './userBlog'
+export * from './common'
 
-User.hasMany(Blog)
-Blog.belongsTo(User)
+export * from './user'
 
+export * from './blog'
 
-User.belongsToMany(Blog, { through: UserBlogs, as: 'authoredBlogs' })
-Blog.belongsToMany(User, { through: UserBlogs, as: 'usersAuthored' })
-
-export {
-    Blog,
-    User
-}
+export * from './auth' 

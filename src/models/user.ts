@@ -1,31 +1,21 @@
-import {DataTypes, Model } from 'sequelize';
+import Helper from '../db_pool/helper';
+import { NullableString } from '../typings/types';
+import Common from './common';
 
-import { sequelizeConnection as sequelize } from '../utils/db';
+export class User extends Common {
+  public username: NullableString = undefined
 
-export default class User extends Model {}
+  public name: NullableString = undefined
 
-User.init({
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  username: {
-    type: DataTypes.STRING,
-    unique: true,
-    allowNull: false
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  passwordHash: {
-    type:DataTypes.STRING,
-    allowNull: false
-  },
-}, {
-  sequelize,
-  underscored: true,
-  timestamps: false,
-  modelName: 'user'
-})
+  public hashpass: NullableString = undefined
+
+
+  constructor(model?: any) {
+    super()
+    if (model) {
+      Helper.shallowCopy(model, this)
+    }
+  }
+}
+
+export default User

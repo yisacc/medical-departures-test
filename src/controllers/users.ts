@@ -1,69 +1,57 @@
 import { Response } from 'express'
-import bcrypt from 'bcrypt';
-import {sequelizeConnection as sequelize} from '../utils/db';
-import HttpResponse from '../utils/httpResponse';
-import { CUserAuthInfoRequest } from '../typings/interface';
+import {ResponseWrapper} from '../utils/httpResponse';
+import {  UserInfoRequest } from '../typings/interface';
+import UserService from '../services/user_service';
+import { User } from '../models';
 
 
 
 
 export class UserController {
-  public static async getAll(_req:CUserAuthInfoRequest,res:Response){
-    const query= 'SELECT id,username,name FROM users'
-    console.log('called')
-    const [results] = await sequelize.query(query)
-    const httpResponse = HttpResponse.get(results)
-    res.status(200).json(httpResponse)
+  public static async getAll(req:UserInfoRequest,res:Response){
+    const objSysAdmin = req.user 
+
+    const userService: UserService = new UserService(objSysAdmin)
+    const response: ResponseWrapper = new ResponseWrapper(res)
+    return response.ok(await userService.getAllUsers())
   }
   
-  public static async addUser(req: CUserAuthInfoRequest, res: Response) {
-    const {password,username,name}:{password:string,username:string,name:string}=req.body;
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash(password, saltRounds) 
-    const query=`
-    INSERT INTO users
-    (
-      username, name, passwordHash
-    )
-    VALUES
-    (
-      '${username}', '${name}', '${passwordHash}'
-    )
-    RETURNING id
-  `;
-      const [results] = await sequelize.query(query)
-      const httpResponse = HttpResponse.created(results)
-      res.status(201).json(httpResponse)
+  public static async addUser(req: UserInfoRequest, res: Response) {
+    const objSysAdmin = req.user 
+    const { password } = req.body
+    const user = new User({ hashpass: password, ...req.body })
+
+    const userService: UserService = new UserService(objSysAdmin)
+    const response: ResponseWrapper = new ResponseWrapper(res)
+
+    return response.created(await userService.addUser(user))
   }
 
-  public static async getUser(req: CUserAuthInfoRequest, res: Response) {
-    const id=Number(req.params.id)
-  const query=`SELECT username, name FROM users WHERE id = ${id}`
-  const [results]=await sequelize.query(query)
-  if (results.length) {
-    const httpResponse = HttpResponse.get(results)
-    res.status(201).json(httpResponse)
-  } else {
-    res.status(404).end()
-  }
+  public static async getUser(req: UserInfoRequest, res: Response) {
+    const objSysAdmin = req.user 
+    const user = new User()
+    user.id = parseInt(req.params.id_user)
+    const reg = new RegExp('^[0-9]+$')
+    if (!reg.test(req.params.id_user)) return res.send({ success: false, data: { message: 'Invalid User Id' } })
+
+    const userService: UserService = new UserService(objSysAdmin)
+    const response: ResponseWrapper = new ResponseWrapper(res)
+
+    return response.ok(await userService.getSingleUser(user))
   }
 
-  public static async updateUser(req: CUserAuthInfoRequest, res: Response) {
-    const id=Number(req.params.id)
-  const {username,name}:
-  {username:string,name:string}=req.body;
-  const query=`UPDATE users
-   SET username='${username}',
-    name='${name}'
-     WHERE id = ${id}
-     returning id,username,name`
-  const [results]=await sequelize.query(query)
-  if (results.length) {
-    const httpResponse = HttpResponse.updated(results)
-    res.status(200).json(httpResponse)
-  } else {
-    res.status(404).end()
-  }
+  public static async updateUser(req: UserInfoRequest, res: Response) {
+    const objSysAdmin = req.user 
+    const { password } = req.body
+    const user = new User({ hashpass: password, ...req.body })
+    user.id = parseInt(req.params.id_user)
+    const reg = new RegExp('^[0-9]+$')
+    if (!reg.test(req.params.id_user)) return res.send({ success: false, data: { message: 'Invalid User Id' } })
+
+    const userService: UserService = new UserService(objSysAdmin)
+    const response: ResponseWrapper = new ResponseWrapper(res)
+
+    return response.created(await userService.updateUser(user))
   }
 }
 

@@ -1,18 +1,4 @@
-/**
- *        @file interface.ts
- *  @repository 000-a-3100_api_boilerplate
- * @application 000-a-3100_api_boilerplate
- *     @summary Interface Classes
- * @description Define various interfaces used accross Application
- *  @interfaces - TokenExpire
- *              - TokenBody
- *              - CUserAuthInfoRequest
- *              - MulterRequest
- *              - SQLStatementInsert
- *              - SQLStatementUpdate
- */
-
-import { User as UserModel } from '../models'
+import { User as UserModel, Blog as BlogModel } from '../models'
 import { Request } from 'express'
 
 export interface TokenExpire {
@@ -28,12 +14,11 @@ export interface TokenBody {
   error?: Error
 }
 
-export interface CUserAuthInfoRequest extends Request {
-  cUser: UserModel
+export interface UserInfoRequest extends Request {
+  user: UserModel
 }
-
-export interface MulterRequest extends CUserAuthInfoRequest {
-  file: any
+export interface BlogRequest extends Request {
+  blog: BlogModel
 }
 
 export interface SQLStatementInsert {

@@ -1,28 +1,23 @@
-import {DataTypes, Model } from 'sequelize';
-import { sequelizeConnection as sequelize } from '../utils/db';
+import Helper from '../db_pool/helper';
+import { NullableNumber, NullableString } from '../typings/types';
+import Common from './common';
 
-export default class Blog extends Model {}
-Blog.init({
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  title: {
-    type: DataTypes.TEXT,
-    allowNull: false
-  },
-  author: {
-    type: DataTypes.TEXT,
-    allowNull:false
-  },
-  url: {
-    type: DataTypes.TEXT,
+export class Blog extends Common {
+  public title: NullableString = undefined
+
+  public author: NullableString = undefined
+
+  public url: NullableString = undefined
+  
+  public id_user: NullableNumber = undefined
+
+
+  constructor(model?: any) {
+    super()
+    if (model) {
+      Helper.shallowCopy(model, this)
+    }
   }
-}, {
-    sequelize,
-  underscored: true,
-  timestamps: false,
-  modelName: 'blog'
-});
+}
 
+export default Blog
