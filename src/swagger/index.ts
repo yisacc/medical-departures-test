@@ -1,3 +1,5 @@
+import { getUsers } from "./user.swagger";
+
 export const swaggerDocument = {
   openapi: '3.0.2',
   info: {
@@ -15,5 +17,10 @@ export const swaggerDocument = {
       url:'http://localhost:3000/api',
       description:'Local Server'
     }
-  ]
+  ],
+  paths:{
+    "/users":{
+      "get":getUsers,
+    }
+  }
 }
