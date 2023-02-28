@@ -1,7 +1,7 @@
 
 
 import { User } from '../models'
-import Helper from '../db_pool/helper'
+import {sequelizeConnection as sequelize} from '../utils/db'
 import * as logger from '../utils/logger'
 import { NullableString } from '../typings/types'
 import messages from '../constants'
@@ -18,12 +18,11 @@ export class CommonService {
   }
 
   public async getRows(sql: string, params?: Array<any>) {
-    const pool = Helper.pool()
     let result: any
 
     try {
-      if (params) result = await pool.aquery(this.user_current, sql, params)
-      else result = await pool.aquery(this.user_current, sql)
+      if (params) result = await sequelize.query({query:sql, values:params})
+      else result = await sequelize.query(sql)
 
       if (result.rowCount === 0) throw { message: messages.errors.notFound, status: 404 }
 
@@ -36,12 +35,11 @@ export class CommonService {
   }
 
   public async insertRow(columns: string, param_ids: string, params: Array<any>) {
-    const pool = Helper.pool()
     let result: any
 
     const sql = `INSERT INTO ${this.type_name} (${columns}) VALUES (${param_ids}) returning id`
     try {
-      result = await pool.aquery(this.user_current, sql, params)
+      result = await sequelize.query({query:sql, values:params})
       if (result.rowCount === 0) throw { message: messages.errors.insert, status: 400 }
       return { success: true, data: { result: messages.success.insert, id: result.rows[0].id } }
     } catch (error) {
@@ -52,7 +50,6 @@ export class CommonService {
   }
 
   public async insertRows(columns: string, param_ids: string, params: Array<any>, onconflict = '') {
-    const pool = Helper.pool()
     let result: any
     let sql = `INSERT INTO ${this.type_name} (${columns}) VALUES ${param_ids} returning id`
     if (onconflict) {
@@ -60,7 +57,7 @@ export class CommonService {
     }
 
     try {
-      result = await pool.aquery(this.user_current, sql, params)
+      result = await sequelize.query({query:sql, values:params})
       if (result.rowCount === 0) throw { message: messages.errors.insert, status: 400 }
       return { success: true, data: { result: messages.success.insert, ids: result.rows } }
     } catch (error) {
@@ -71,12 +68,11 @@ export class CommonService {
   }
 
   public async updateRow(columns: string, condition: string, params: Array<any>) {
-    const pool = Helper.pool()
     let result: any
 
     const sql = `UPDATE ${this.type_name} SET ${columns} WHERE ${condition}`
     try {
-      result = await pool.aquery(this.user_current, sql, params)
+      result = await sequelize.query({query:sql, values:params})
       if (result.rowCount === 0) throw { message: messages.errors.notFound, status: 404 }
       return { success: true, data: { result: messages.success.update } }
     } catch (error) {

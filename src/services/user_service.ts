@@ -1,13 +1,13 @@
 
 
-import Helper from '../db_pool/helper'
 import * as config from '../../config'
 import { Auth, User } from '../models'
-import PGPool from '../db_pool/pg_pool'
 import { CommonService } from './common_service'
 import * as logger from '../utils/logger'
 import { TokenBody } from '../typings/interface'
 import messages from '../constants'
+import {sequelizeConnection as sequelize} from '../utils/db'
+import Helper from '../db_pool/helper'
 
 const jwt = require('njwt')
 
@@ -75,38 +75,34 @@ export class UserService extends CommonService {
 
   // get all users
   public async getAllUsers(): Promise<any> {
-    const sql = `SELECT users.id, users.username, users.deleted
+    const sql = `SELECT id, username, deleted
 			FROM users
 			WHERE users.deleted = false`
 
-    const pool = Helper.pool()
-    const query_results = await pool.aquery(this.user_current, sql)
+    const [results] = await sequelize.query(sql)
 
     return {
       success: true,
-      data: query_results.rows,
+      data: results,
     }
   }
 
   // add user
-  public async addUser(user: User, pool?: PGPool): Promise<any> {
-    // pool is not supplied, create one AND start transaction
-    if (pool === undefined) {
-      pool = Helper.pool()
-    }
+  public async addUser(user: User): Promise<any> {
+
 
     try {
       // insert user row
       const sql_user = `INSERT INTO users (username, hashpass)
 				VALUES ('${user.username}', '${user.hashpass}') returning id`
 
-      const userResult = await pool.aquery(this.user_current, sql_user, [])
+      const [results] = await sequelize.query({query:sql_user, values:[]})
 
       return {
         success: true,
         data: {
           message: messages.success.insert,
-          id_user: userResult.rows[0].id,
+          id_user: results,
         },
       }
     } catch (error) {
@@ -130,8 +126,6 @@ export class UserService extends CommonService {
     username: string,
     password:string,
   ) {
-    const pool = Helper.pool()
-    const cUser = Helper.defaultUser()
     try {
       let sql = `SELECT id,username, deleted
 						From users
@@ -141,13 +135,14 @@ export class UserService extends CommonService {
       let params = [username, password]
 
 
-      const query_results = await pool.aquery(cUser, sql, params)
+      const [results]= await sequelize.query({query:sql, values:params})
 
-      if (query_results.rowCount <= 0) {
+      if (results.length <= 0) {
         throw { message: messages.errors.user.invalidUserPassword, status: 400 }
       }
+      const result = results[0] as User
 
-      const user = Helper.getUser(query_results.rows[0])
+      const user = Helper.getUser(result)
       const token = await UserService.createToken(user)
         return {
           success: true,
@@ -165,8 +160,6 @@ export class UserService extends CommonService {
   }
 
   public async getSingleUser(user: User) {
-    const pool = Helper.pool()
-    const cUser = Helper.defaultUser()
     const UserID = user.id
     try {
       const sql = `SELECT id, username, deleted
@@ -176,13 +169,13 @@ export class UserService extends CommonService {
 
       const params = [UserID]
 
-      const query_results = await pool.aquery(cUser, sql, params)
+      const [results] = await sequelize.query({query:sql, values:params})
 
-      if (query_results.rowCount <= 0) {
+      if (results.length <= 0) {
         throw { message: messages.errors.notFound, status: 404 }
       }
-
-      const getUser = Helper.getUser(query_results.rows[0])
+      const result = results[0] as User
+      const getUser = Helper.getUser(result)
       return { success: true, data: { getUser } }
     } catch (error) {
       return { success: false, data: { message: error.message }, status: error.status }
@@ -190,17 +183,14 @@ export class UserService extends CommonService {
   }
 
   public async updateUser(user: User) {
-    const pool = Helper.pool()
     try {
       let user_columns = `username = '${user.username}'`
       if (user.hashpass) user_columns += `, hashpass = '${user.hashpass}'`
       // update users
       const user_sql = `UPDATE users SET ${user_columns} WHERE id = '${user.id}'`
 
-      const res = await pool.aquery(this.user_current, user_sql, [])
-      if (!res.rowCount) throw { message: 'User does not exist', status: 404 }
-
-      await pool.aquery(this.user_current, [] as any)
+      const [results] = await sequelize.query({query:user_sql, values:[]})
+      if (!results.length) throw { message: 'User does not exist', status: 404 }
 
       return { success: true, data: { message: messages.success.update } }
     } catch (error) {

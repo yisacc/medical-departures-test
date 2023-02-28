@@ -1,5 +1,5 @@
 import Helper from '../db_pool/helper';
-import { NullableNumber, NullableString } from '../typings/types';
+import {  NullableString } from '../typings/types';
 import Common from './common';
 
 export class Blog extends Common {
@@ -8,8 +8,6 @@ export class Blog extends Common {
   public author: NullableString = undefined
 
   public url: NullableString = undefined
-  
-  public id_user: NullableNumber = undefined
 
 
   constructor(model?: any) {
