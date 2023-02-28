@@ -8,10 +8,8 @@ import { OpenAPI } from 'openapi-types'
 const YAML = require('json-to-pretty-yaml')
 export default async function main(): Promise<number> {
   try {
-    const oas3Specification: any = swaggerJsdoc(options)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+    const oas3Specification: any = swaggerJsdoc(options as swaggerJsdoc.Options)
     const api = await swaggerParser.validate(oas3Specification) as OpenAPI.Document
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const yaml_api:string = YAML.stringify(api)
     const apiFile = path.resolve(__dirname, 'backend_api.yaml')
     fs.writeFileSync(apiFile, yaml_api)
