@@ -47,5 +47,5 @@ export default {
       },
     },
   },
-  apis: ['./routes/**/*.ts',[]],
+  apis: ['./routes/**/*.ts'],
 }

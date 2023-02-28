@@ -1,4 +1,4 @@
-import app from './app';
+import app from '../src/app';
 import {PORT} from './utils/config';
 import * as logger from './utils/logger';
 
