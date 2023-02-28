@@ -76,7 +76,7 @@ export class UserService extends CommonService {
 
   // get all users
   public async getAllUsers(): Promise<{success:boolean,data:any}> {
-    const sql = `SELECT id, username, deleted
+    const sql = `SELECT id, username,name, deleted
 			FROM users
 			WHERE users.deleted = false`
 
@@ -93,18 +93,16 @@ export class UserService extends CommonService {
 
 
     try {
-      console.log(this.user_current)
       // insert user row
       const sql_user = `INSERT INTO users (username,name, hashpass,created_by,created_date)
 				VALUES ('${user.username}','${user.name}', '${user.hashpass}', ${this.user_current.id}, '${new Date().toUTCString()}') returning id`
-console.log(sql_user)
       const [results] = await sequelize.query(sql_user)
-
+      
       return {
         success: true,
         data: {
           message: messages.success.insert,
-          id_user: results,
+          id_user: results[0],
         },
       }
     } catch (error) {
@@ -145,7 +143,7 @@ console.log(sql_user)
         throw { message: messages.errors.user.invalidUserPassword, status: 400 }
       }
       const result = results[0] as User
-
+      delete result.hashpass
       const user = Helper.getUser(result)
       const token = await UserService.createToken(user)
         return {
@@ -168,8 +166,8 @@ console.log(sql_user)
     try {
       const sql = `SELECT id, username,name, deleted
       FROM users
-      WHERE users.deleted = false 
-      AND users.id = $1 `
+      WHERE deleted = false 
+      AND id = $1 `
 
       const params = [UserID]
 
@@ -189,16 +187,39 @@ console.log(sql_user)
   public async updateUser(user: User) {
     try {
       let user_columns = `username = '${user.username}'`
-      if (user.hashpass) user_columns += `, hashpass = '${user.hashpass}'`
+      user_columns += `, modified_by = ${this.user_current.id}`
+      user_columns += `, modified_date = '${new Date().toUTCString()}'`
       // update users
-      const user_sql = `UPDATE users SET ${user_columns} WHERE id = '${user.id}'`
+      const user_sql = `UPDATE users SET ${user_columns} WHERE id = ${user.id}`
 
-      const [results] = await sequelize.query({query:user_sql, values:[]})
-      if (!results.length) throw { message: 'User does not exist', status: 404 }
+      const [results,metadata] = await sequelize.query(user_sql)
+      console.log(results)
+      if (!(metadata as any).rowCount) throw { message: 'User does not exist', status: 404 }
 
       return { success: true, data: { message: messages.success.update } }
     } catch (error) {
       logger.error(`UserService.updateUser() Error: ${error}`)
+      return { success: false, data: { message: error.detail || error.message }, status: error.status }
+    }
+  }
+
+  public async deleteUser(user: User) {
+    try {
+      let deleteUser=this.getSingleUser(user)
+      console.log(deleteUser)
+      let user_columns = `deleted = true`
+      user_columns += `, deleted_by = ${this.user_current.id}`
+      user_columns += `, deleted_date = '${new Date().toUTCString()}'`
+      // update users
+      const user_sql = `UPDATE users SET ${user_columns} WHERE id = ${user.id}`
+
+      const [results,metadata] = await sequelize.query(user_sql)
+      console.log(results)
+      if (!(metadata as any).rowCount) throw { message: 'User does not exist', status: 404 }
+
+      return { success: true, data: { message: messages.success.update } }
+    } catch (error) {
+      logger.error(`UserService.deleteUser() Error: ${error}`)
       return { success: false, data: { message: error.detail || error.message }, status: error.status }
     }
   }

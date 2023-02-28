@@ -28,6 +28,7 @@ Authorization: Bearer {{token}}
 ###
 POST {{baseUrl}}/users
 content-type: application/json
+Authorization: Bearer {{token}}
 
 {
     "username": "kasahun",
@@ -51,8 +52,9 @@ Authorization: Bearer {{token}}
 
 
 ###
-PUT {{baseUrl}}/users/8
+PUT {{baseUrl}}/users/5
 content-type: application/json
+Authorization: Bearer {{token}}
 
 {
     "username": "jasri",
@@ -61,11 +63,6 @@ content-type: application/json
 
 
 ###
-POST {{baseUrl}}/users
+DELETE  {{baseUrl}}/users/5
 content-type: application/json
-
-{
-    "username": "newuser",
-    "name": "new user",
-    "password": "testpass"
-}
+Authorization: Bearer {{token}}

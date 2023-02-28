@@ -51,7 +51,21 @@ export class UserController {
     const userService: UserService = new UserService(objSysAdmin)
     const response: ResponseWrapper = new ResponseWrapper(res)
 
-    return response.created(await userService.updateUser(user))
+    return response.ok(await userService.updateUser(user))
+  }
+
+  public static async deleteUser(req: UserInfoRequest, res: Response) {
+    const objSysAdmin = req.user 
+    const user = new User()
+    user.id = parseInt(req.params.id_user)
+    console.log('user log',user)
+    const reg = new RegExp('^[0-9]+$')
+    if (!reg.test(req.params.id_user)) return res.send({ success: false, data: { message: 'Invalid User Id' } })
+
+    const userService: UserService = new UserService(objSysAdmin)
+    const response: ResponseWrapper = new ResponseWrapper(res)
+
+    return response.created(await userService.deleteUser(user))
   }
 }
 

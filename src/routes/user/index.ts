@@ -13,7 +13,7 @@ usersRouter.get('/',
 }, 
   wrapper(UserController.getAll)
 )
-usersRouter.get('/:id',
+usersRouter.get('/:id_user',
 (req, res, next) => {
   CheckAuth.check(req, res, next)
 },  
@@ -32,7 +32,7 @@ usersRouter.post(
 )
 
 usersRouter.put(
-  '/:id',
+  '/:id_user',
   (req, res, next) => {
     Schema.handle(req, res, next, UserValidator.editUser())
   },
@@ -41,5 +41,11 @@ usersRouter.put(
   },
   wrapper(UserController.updateUser)
 )
-
+usersRouter.delete(
+  '/:id_user',
+  (req, res, next) => {
+    CheckAuth.check(req, res, next)
+  },
+  wrapper(UserController.deleteUser)
+)
 export default usersRouter
