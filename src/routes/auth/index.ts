@@ -1,3 +1,4 @@
+
 import express from 'express'
 import Schema from '../../middlewares/schema'
 import AuthValidator from '../../validators/auth'
@@ -9,7 +10,7 @@ const authRouter = express.Router()
 /**
  * @openapi
  *
- * /v0/auth/login:
+ * /api/auth/login:
  *   post:
  *     tags:
  *      - Auth

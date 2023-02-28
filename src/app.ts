@@ -22,10 +22,8 @@ app.use(middleware.requestLogger);
 	// set swagger
 	try {
 		await SwaggerInit();
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
 		const oas3Specification: any = yaml.load(fs.readFileSync(path.resolve(__dirname,'./swagger/backend_api.yaml'), 'utf8'))
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-		app.use('/swagger', swaggerUi.serve, swaggerUi.setup(oas3Specification))
+		app.use('/swagger', swaggerUi.serve, swaggerUi.setup(oas3Specification, {explorer:true}))
 	} catch (error) {
 		logger.error(`main(): Swagger error: ${error}`)
 	}
