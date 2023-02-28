@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend Development Test for Medical Departures",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "build": "./node_modules/.bin/tsc --project ./tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1",
