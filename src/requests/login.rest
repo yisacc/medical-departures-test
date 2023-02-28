@@ -1,9 +1,9 @@
 ### login
 # @name getToken
-POST {{baseUrl}}/login
+POST {{baseUrl}}/auth/login
 content-type: application/json
 
 {
-    "username": "newuser",
-    "password": "testpass"
+    "username": "medicaldepartures",
+    "password": "password"
 }

@@ -3,13 +3,21 @@ import { wrapper } from '../../utils/helpers';
 import Schema from '../../middlewares/schema';
 import BlogValidator from '../../validators/blog'
 import BlogController from '../../controllers/blogs';
+import { CheckAuth } from '../../middlewares/check_auth';
 const blogsRouter = express.Router();
 
 
 blogsRouter.get('/',
+(req, res, next) => {
+  CheckAuth.check(req, res, next)
+},
   wrapper(BlogController.getAll)
 )
-blogsRouter.get('/:id', 
+
+blogsRouter.get('/:id',
+(req, res, next) => {
+  CheckAuth.check(req, res, next)
+}, 
 wrapper(BlogController.getBlog)
 )
 
@@ -18,6 +26,9 @@ blogsRouter.post(
   (req, res, next) => {
     Schema.handle(req, res, next, BlogValidator.blog())
   },
+  (req, res, next) => {
+    CheckAuth.check(req, res, next)
+  },
   wrapper(BlogController.addBlog)
 )
 
@@ -25,6 +36,9 @@ blogsRouter.put(
   '/:id',
   (req, res, next) => {
     Schema.handle(req, res, next, BlogValidator.editBlog())
+  },
+  (req, res, next) => {
+    CheckAuth.check(req, res, next)
   },
   wrapper(BlogController.updateBlog)
 )

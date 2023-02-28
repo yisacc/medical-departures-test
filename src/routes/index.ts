@@ -1,11 +1,11 @@
 import { Router } from 'express'
-// import loginRouter from '../controllers/login'
+import authRouter from './auth'
 import blogsRouter from './blog'
 import usersRouter from './user'
 
 const router = Router()
 
-// router.use('/login', loginRouter)
+router.use('/auth', authRouter)
 
 router.use('/blogs', blogsRouter)
 

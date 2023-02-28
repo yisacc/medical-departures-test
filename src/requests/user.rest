@@ -1,9 +1,12 @@
 GET {{baseUrl}}/users
+Authorization: Bearer {{token}}
+
 
 
 ###
 POST {{baseUrl}}/users
 content-type: application/json
+Authorization: Bearer {{token}}
 
 {
     "username": "root two",
@@ -14,6 +17,7 @@ content-type: application/json
 ###
 POST {{baseUrl}}/users
 content-type: application/json
+Authorization: Bearer {{token}}
 
 {
     "username": "yisacc",
@@ -42,7 +46,8 @@ content-type: application/json
 }
 
 ###
-GET {{baseUrl}}/users/2
+GET {{baseUrl}}/users/3
+Authorization: Bearer {{token}}
 
 
 ###

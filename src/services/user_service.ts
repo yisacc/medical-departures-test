@@ -8,6 +8,7 @@ import { TokenBody } from '../typings/interface'
 import messages from '../constants'
 import {sequelizeConnection as sequelize} from '../utils/db'
 import Helper from '../db_pool/helper'
+import bcrypt from 'bcrypt'
 
 const jwt = require('njwt')
 
@@ -74,7 +75,7 @@ export class UserService extends CommonService {
   }
 
   // get all users
-  public async getAllUsers(): Promise<any> {
+  public async getAllUsers(): Promise<{success:boolean,data:any}> {
     const sql = `SELECT id, username, deleted
 			FROM users
 			WHERE users.deleted = false`
@@ -92,11 +93,12 @@ export class UserService extends CommonService {
 
 
     try {
+      console.log(this.user_current)
       // insert user row
-      const sql_user = `INSERT INTO users (username, hashpass)
-				VALUES ('${user.username}', '${user.hashpass}') returning id`
-
-      const [results] = await sequelize.query({query:sql_user, values:[]})
+      const sql_user = `INSERT INTO users (username,name, hashpass,created_by,created_date)
+				VALUES ('${user.username}','${user.name}', '${user.hashpass}', ${this.user_current.id}, '${new Date().toUTCString()}') returning id`
+console.log(sql_user)
+      const [results] = await sequelize.query(sql_user)
 
       return {
         success: true,
@@ -127,17 +129,19 @@ export class UserService extends CommonService {
     password:string,
   ) {
     try {
-      let sql = `SELECT id,username, deleted
+      let sql = `SELECT id,username, hashpass, deleted
 						From users
 						WHERE users.deleted = false 
-						AND users.username = $1 
-                        AND hashpass=crypt($2, hashpass)`
-      let params = [username, password]
+						AND users.username = $1`
+      let params = [username]
 
 
-      const [results]= await sequelize.query({query:sql, values:params})
+      const [results]= await sequelize.query(sql,{ bind:params})
 
       if (results.length <= 0) {
+        throw { message: messages.errors.user.invalidUserPassword, status: 400 }
+      }
+      if(!(await bcrypt.compare(password, (results as any)[0].hashpass))){
         throw { message: messages.errors.user.invalidUserPassword, status: 400 }
       }
       const result = results[0] as User
@@ -162,14 +166,14 @@ export class UserService extends CommonService {
   public async getSingleUser(user: User) {
     const UserID = user.id
     try {
-      const sql = `SELECT id, username, deleted
+      const sql = `SELECT id, username,name, deleted
       FROM users
       WHERE users.deleted = false 
       AND users.id = $1 `
 
       const params = [UserID]
 
-      const [results] = await sequelize.query({query:sql, values:params})
+      const [results] = await sequelize.query(sql, {bind:params})
 
       if (results.length <= 0) {
         throw { message: messages.errors.notFound, status: 404 }

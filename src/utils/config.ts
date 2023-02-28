@@ -3,6 +3,6 @@ dotenv.config();
 
 
   export const PORT= process.env.PORT || 3001;
-  export const saltRounds= process.env.saltRounds
+  export const saltRounds= process.env.saltRounds?parseInt(process.env.saltRounds) : 10
   export const DATABASE_URL= process.env.DATABASE_URL!
   export const SECRET = process.env.SECRET;

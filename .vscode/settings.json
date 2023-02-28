@@ -2,7 +2,7 @@
     "rest-client.environmentVariables": {
         "local": {
             "baseUrl":"http://localhost:3000/api",
-            "token":""
+            "token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtZWRpY2FsZGVwYXJ0dXJlcyIsImlzcyI6Imh0dHBzOi8vd2Vic2l0ZWFwcC5jb20iLCJzYnhVc2VyIjp7ImlkIjozLCJ1c2VybmFtZSI6Im1lZGljYWxkZXBhcnR1cmVzIiwiaGFzaHBhc3MiOiIkMmIkMTAkbGFGUVNTOHJDYWVHNXRCQW1YZzJzdTQ5cHJERWNLZlRjdU5sSVdQTzRYb3ovLzFBNkx2V1cifSwianRpIjoiZmUyNTIyZDctZTc1Ny00NTg5LWJkOTItZTM4ZjVkMDE3N2Q0IiwiaWF0IjoxNjc3NTgxNjc3LCJleHAiOjE2Nzc2OTY4Nzd9.B003Moh1e7rHjq_HnsXYGG9xaU-vKB6r0RZHMdhEOHQ"
         }
     }
 }
