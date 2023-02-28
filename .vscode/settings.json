@@ -2,7 +2,7 @@
     "rest-client.environmentVariables": {
         "local": {
             "baseUrl":"http://localhost:3000/api",
-            "token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtZWRpY2FsZGVwYXJ0dXJlcyIsImlzcyI6Imh0dHBzOi8vd2Vic2l0ZWFwcC5jb20iLCJzYnhVc2VyIjp7ImlkIjozLCJ1c2VybmFtZSI6Im1lZGljYWxkZXBhcnR1cmVzIn0sImp0aSI6IjlmYWU2MmQ5LTc4ZTgtNDYyYi1iODdjLThhMzRlODdhMTFiNCIsImlhdCI6MTY3NzU4NzA5MywiZXhwIjoxNjc3NzAyMjkzfQ.FmP95IOR9_xJl8J5z45JhMYSG59L3Yp9XrYjFOsVjog"
+            "token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtZWRpY2FsZGVwYXJ0dXJlcyIsImlzcyI6Imh0dHBzOi8vd2Vic2l0ZWFwcC5jb20iLCJzYnhVc2VyIjp7ImlkIjozLCJ1c2VybmFtZSI6Im1lZGljYWxkZXBhcnR1cmVzIn0sImp0aSI6ImJkNDA5Nzc0LTVjNjYtNDBmNi05OGJiLTVjNjM0MDcxNDc0YSIsImlhdCI6MTY3NzYwMTA0NCwiZXhwIjoxNjc3NzE2MjQ0fQ.0r13lARCbrifiLisiJ1bbrawWHADgOlwdK-C0m1sQeU"
         }
     }
 }

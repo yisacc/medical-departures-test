@@ -205,8 +205,6 @@ export class UserService extends CommonService {
 
   public async deleteUser(user: User) {
     try {
-      let deleteUser=this.getSingleUser(user)
-      console.log(deleteUser)
       let user_columns = `deleted = true`
       user_columns += `, deleted_by = ${this.user_current.id}`
       user_columns += `, deleted_date = '${new Date().toUTCString()}'`

@@ -58,7 +58,6 @@ export class UserController {
     const objSysAdmin = req.user 
     const user = new User()
     user.id = parseInt(req.params.id_user)
-    console.log('user log',user)
     const reg = new RegExp('^[0-9]+$')
     if (!reg.test(req.params.id_user)) return res.send({ success: false, data: { message: 'Invalid User Id' } })
 

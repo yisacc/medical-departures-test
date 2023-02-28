@@ -18,7 +18,8 @@ export interface UserInfoRequest extends Request {
   user: UserModel
 }
 export interface BlogRequest extends Request {
-  blog: BlogModel
+  blog: BlogModel,
+  user: UserModel
 }
 
 export interface SQLStatementInsert {

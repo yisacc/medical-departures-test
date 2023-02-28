@@ -14,7 +14,7 @@ blogsRouter.get('/',
   wrapper(BlogController.getAll)
 )
 
-blogsRouter.get('/:id',
+blogsRouter.get('/:id_blog',
 (req, res, next) => {
   CheckAuth.check(req, res, next)
 }, 
@@ -33,7 +33,7 @@ blogsRouter.post(
 )
 
 blogsRouter.put(
-  '/:id',
+  '/:id_blog',
   (req, res, next) => {
     Schema.handle(req, res, next, BlogValidator.editBlog())
   },
@@ -42,5 +42,13 @@ blogsRouter.put(
   },
   wrapper(BlogController.updateBlog)
 )
+
+blogsRouter.delete(
+    '/:id_blog',
+    (req, res, next) => {
+      CheckAuth.check(req, res, next)
+    },
+    wrapper(BlogController.deletBlog)
+  )
 
 export default blogsRouter
