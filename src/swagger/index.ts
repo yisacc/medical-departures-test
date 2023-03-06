@@ -1,4 +1,4 @@
-import { getUsers } from "./user.swagger";
+import { getUsers,login } from "./user.swagger";
 
 export const swaggerDocument = {
   openapi: '3.0.2',
@@ -19,8 +19,27 @@ export const swaggerDocument = {
     }
   ],
   paths:{
-    "/users":{
+    "/ping":{
+      "get":{
+        "responses":{
+          '200':{
+            "content":{
+              "text/html; charset=utf-8":{
+                "schema":{
+                  type: "string",
+                "examples": {}
+                }
+              }
+            }
+          }
+        }
+      }
+      },
+      "/api/auth/login":{
+      "post":login
+      },
+    "/api/users":{
       "get":getUsers,
-    }
+    },
   }
 }

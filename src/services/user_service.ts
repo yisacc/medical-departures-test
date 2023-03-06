@@ -116,11 +116,6 @@ export class UserService extends CommonService {
     return this.getUserAndAuthToken(username, password)
   }
 
-  // get user AND auth token without password
-  public static async refreshToken(username: string) {
-    return this.getUserAndAuthToken(username, '')
-  }
-
   // Gets user details AND auth token
   public static async getUserAndAuthToken(
     username: string,

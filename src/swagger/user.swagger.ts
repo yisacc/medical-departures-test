@@ -32,3 +32,35 @@ export const getUsers = {
         }
     }
 } 
+
+export const login={
+    tags: ['Auth'],
+    requestBody:{
+        content:{
+            "application/json":{
+                schema:{
+                    type:"object",
+                    properties:{
+                        password:{
+                            type:"string",
+                        },
+                        username:{
+                            type:"string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    responses:{
+        '201':{
+            content:{
+                "application/json; charset=utf-8":{
+                    schema:{
+                        type:"string"
+                    }
+                }
+            }
+        }
+    }
+}
