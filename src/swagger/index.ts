@@ -1,4 +1,5 @@
-import { getUsers,login } from "./user.swagger";
+import { addBlog, getBlog, getBlogs, updateBlog } from "./blog.swagger";
+import { getUsers,login,addUser, getUser, updateUser } from "./user.swagger";
 
 export const swaggerDocument = {
   openapi: '3.0.2',
@@ -40,6 +41,19 @@ export const swaggerDocument = {
       },
     "/api/users":{
       "get":getUsers,
+      "post":addUser
     },
+    "/api/users/:id":{
+      "get":getUser,
+      "put":updateUser,
+    },
+    "/api/blogs":{
+      "get":getBlogs,
+      "post":addBlog
+    },
+    "/api/blogs/:id":{
+      "get":getBlog,
+      "put":updateBlog,
+    }
   }
 }

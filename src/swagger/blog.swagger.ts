@@ -1,7 +1,8 @@
-export const getUsers = {
-    tags: ['Users'],
-    description: "Returns all users from the system",
-    operationId: 'getUsers',
+
+
+export const getBlogs = {
+    tags: ['Blogs'],
+    description: "Returns all blogs from the system",
     security: [
         {
             bearerAuth: []
@@ -26,14 +27,23 @@ export const getUsers = {
                                         id: {
                                             type: 'number',
                                         },
-                                        username: {
+                                        title: {
                                             type: 'string',
                                         },
-                                        name: {
+                                        author: {
+                                            type: 'string',
+                                        },
+                                        url: {
                                             type: 'string',
                                         },
                                         deleted: {
                                             type: 'boolean',
+                                        },
+                                        creator:{
+                                            type:"string"
+                                        },
+                                        id_user:{
+                                            type:"number"
                                         }
                                     }
 
@@ -49,8 +59,8 @@ export const getUsers = {
     }
 } 
 
-export const getUser = {
-    tags: ['Users'],
+export const getBlog = {
+    tags: ['Blogs'],
     security: [
         {
             bearerAuth: []
@@ -69,16 +79,29 @@ export const getUser = {
                             data:{
                                 type:"object",
                                 properties:{
-                                id:{
-                                    type:"number",
-                                },
-                                name:{
-                                    type:"string"
-                                },
-                                username:{
-                                    type:"string"
+                                    id: {
+                                        type: 'number',
+                                    },
+                                    title: {
+                                        type: 'string',
+                                    },
+                                    author: {
+                                        type: 'string',
+                                    },
+                                    url: {
+                                        type: 'string',
+                                    },
+                                    deleted: {
+                                        type: 'boolean',
+                                    },
+                                    creator:{
+                                        type:"string"
+                                    },
+                                    id_user:{
+                                        type:"number"
+                                    }
                                 }
-                            }
+
                             }
 
                         }
@@ -90,8 +113,8 @@ export const getUser = {
 } 
 
 
-export const addUser = {
-    tags: ['Users'],
+export const addBlog = {
+    tags: ['Blogs'],
     security: [
         {
             bearerAuth: []
@@ -103,13 +126,13 @@ export const addUser = {
                 schema:{
                     type:"object",
                     properties:{
-                        password:{
+                        title:{
                             type:"string",
                         },
-                        name:{
+                        author:{
                             type:"string"
                         },
-                        username:{
+                        url:{
                             type:"string"
                         }
                     }
@@ -119,9 +142,9 @@ export const addUser = {
         examples:{
             '0':{
                 value:{
-                    "username": "mahlet",
-                    "name": "mahletsuper",
-                    "password": "tewesta"
+                    "title": "hjkknknkn",
+                    "author": "dostovosdfdfdfkey",
+                    "url": "not provided"
                 }
             }
         }
@@ -139,15 +162,14 @@ export const addUser = {
                             data:{
                                 type:"object",
                                 properties:{
-                                message:{
-                                    type:"string",
-                                },
-                                id_user:{
-                                    type:"number"
+                                    message:{
+                                        type:"string"
+                                    },
+                                    id_blog:{
+                                        type:"number"
+                                    }
                                 }
                             }
-                            }
-
                         }
                     }
                 }
@@ -157,8 +179,8 @@ export const addUser = {
 } 
 
 
-export const updateUser = {
-    tags: ['Users'],
+export const updateBlog = {
+    tags: ['Blogs'],
     security: [
         {
             bearerAuth: []
@@ -170,10 +192,13 @@ export const updateUser = {
                 schema:{
                     type:"object",
                     properties:{
-                        name:{
+                        title:{
+                            type:"string",
+                        },
+                        author:{
                             type:"string"
                         },
-                        username:{
+                        url:{
                             type:"string"
                         }
                     }
@@ -207,63 +232,5 @@ export const updateUser = {
         }
     }
 } 
-export const login={
-    tags: ['Auth'],
-    requestBody:{
-        content:{
-            "application/json":{
-                schema:{
-                    type:"object",
-                    properties:{
-                        password:{
-                            type:"string",
-                        },
-                        username:{
-                            type:"string"
-                        }
-                    }
-                }
-            }
-        }
-    },
-    responses: {
-        "200": {          
-            "content": {
-                "application/json": {
-                    schema: {
-                        type: "object",
-                        properties:{
-                            success:{
-                                type:"boolean"
-                            },
-                            data:{
-                                type:"object",
-                                properties:{
-                                message:{
-                                    type:"string",
-                                },
-                                authToken:{
-                                    type:"string"
-                                },
-                                user:{
-                                    type:"object",
-                                    properties:{
-                                        id:{
-                                            type:"number"
-                                        },
-                                        username:{
-                                            type:"string"
-                                        }
-                                    }
-                                }
-                            }
-                            }
 
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
